@@ -8,6 +8,7 @@ Color darkGreen = { 43, 51, 24, 255 };  // Define another color named 'darkGreen
 
 int cellSize = 30;  // Set the size of each cell in the grid
 int cellCount = 25; // Set the total number of cells in the grid
+int offset = 75;
 
 double lastUpdateTime = 0;  // Initialize a variable to store the time of the last update
 
@@ -57,7 +58,7 @@ public:
         {
             float x = body[i].x;
             float y = body[i].y;
-            Rectangle segment = Rectangle{x*cellSize, y*cellSize, (float)cellSize, (float)cellSize};
+            Rectangle segment = Rectangle{offset + x*cellSize, offset + y*cellSize, (float)cellSize, (float)cellSize};
             DrawRectangleRounded(segment, 0.5f, 6.0f, darkGreen);
         }
     }
@@ -104,7 +105,7 @@ public:
 
     void Draw() // Function to draw the food on the screen
     {
-        DrawTexture(texture, position.x*cellSize, position.y*cellSize, WHITE);  // Draw the texture at the position with white color
+        DrawTexture(texture, offset + position.x*cellSize, offset + position.y*cellSize, WHITE);  // Draw the texture at the position with white color
     }
 
     Vector2 GenerateRandomCell()
@@ -196,7 +197,7 @@ int main()
 {
     std::cout << "Game Commence\n"; // Print a message to the console indicating game start
 
-    InitWindow(cellSize * cellCount, cellSize * cellCount, "Snake Game");   // Create the game window with appropriate size and title
+    InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Snake Game");   // Create the game window with appropriate size and title
     SetTargetFPS(60);   // Set the target frames per second for smooth animation
 
     Game game = Game();
@@ -232,7 +233,9 @@ int main()
             game.running = true;
         }
 
-        ClearBackground(green); // Clear the screen with the light green background color        
+        ClearBackground(green); // Clear the screen with the light green background color     
+        DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10}, 5.0f, darkGreen);
+        DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
         game.Draw();
 
         EndDrawing();   // End drawing operations
