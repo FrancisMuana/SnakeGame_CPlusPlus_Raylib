@@ -136,6 +136,23 @@ public:
     Snake snake = Snake();
     Food food = Food(snake.body);
     bool running = true;
+    int score = 0;
+    Sound eatSound;
+    Sound wallSound;
+
+    Game()
+    {
+        InitAudioDevice();
+        eatSound = LoadSound("Sounds/eat.mp3");
+        wallSound = LoadSound("Sounds/wall.mp3");
+    }
+
+    ~Game()
+    {        
+        UnloadSound(eatSound);
+        UnloadSound(wallSound);
+        CloseAudioDevice();
+    }
 
     void Draw()
     {
@@ -160,6 +177,8 @@ public:
         {
             food.position = food.GenerateRandomPosition(snake.body);
             snake.addSegment = true;
+            score++;
+            PlaySound(eatSound);
         }
     }
 
@@ -180,6 +199,8 @@ public:
         snake.Reset();
         food.position = food.GenerateRandomPosition(snake.body);
         running = false;
+        score = 0;
+        PlaySound(wallSound);
     }
 
     void CheckCollisionWithTail()
@@ -236,6 +257,7 @@ int main()
         ClearBackground(green); // Clear the screen with the light green background color     
         DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10}, 5.0f, darkGreen);
         DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
+        DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);
         game.Draw();
 
         EndDrawing();   // End drawing operations
