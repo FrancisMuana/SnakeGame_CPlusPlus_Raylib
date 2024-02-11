@@ -8,7 +8,7 @@ Color darkGreen = { 43, 51, 24, 255 };  // Define another color named 'darkGreen
 
 int cellSize = 30;  // Set the size of each cell in the grid
 int cellCount = 25; // Set the total number of cells in the grid
-int offset = 75;
+int offset = 75;    // Define an offset value to adjust positions or coordinates in the grid
 
 double lastUpdateTime = 0;  // Initialize a variable to store the time of the last update
 
@@ -48,38 +48,38 @@ bool EventTriggered(double interval)
 class Snake
 {
 public:
-    std::deque<Vector2> body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} };
-    Vector2 direction = { 1, 0 };
-    bool addSegment = false;
+    std::deque<Vector2> body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} }; // Define the snake's initial body position
+    Vector2 direction = { 1, 0 };   // Set the initial direction of the snake
+    bool addSegment = false;    // Flag to determine whether to add a new segment to the snake's body
 
-    void Draw()
+    void Draw() // Method to draw the snake on the screen
     {
-        for (size_t i = 0; i < body.size(); i++)
+        for (size_t i = 0; i < body.size(); i++)    // Iterate over each segment of the snake's body
         {
-            float x = body[i].x;
-            float y = body[i].y;
-            Rectangle segment = Rectangle{offset + x*cellSize, offset + y*cellSize, (float)cellSize, (float)cellSize};
-            DrawRectangleRounded(segment, 0.5f, 6.0f, darkGreen);
+            float x = body[i].x;    // Get the x-coordinate of the current segment
+            float y = body[i].y;    // Get the y-coordinate of the current segment
+            Rectangle segment = Rectangle{offset + x*cellSize, offset + y*cellSize, (float)cellSize, (float)cellSize};  // Define a rectangle representing the current segment's position and size
+            DrawRectangleRounded(segment, 0.5f, 6.0f, darkGreen);   // Draw the current segment on the screen
         }
     }
 
-    void Update()
+    void Update()   // Method to update the snake's position
     {
-        body.push_front(Vector2Add(body[0], direction));
-        if (addSegment == true)
+        body.push_front(Vector2Add(body[0], direction));    // Move the snake's head in the current direction
+        if (addSegment == true) // If a new segment is flagged to be added
         {            
-            addSegment = false;
+            addSegment = false; // Reset the flag
         }
         else
         {
-            body.pop_back();            
+            body.pop_back();    // Remove the last segment of the snake's body            
         }        
     }
 
-    void Reset()
+    void Reset()    // Method to reset the snake's position and direction
     {
-        body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} };
-        direction = { 1, 0 };
+        body = { Vector2{6, 9}, Vector2{5, 9}, Vector2{4, 9} }; // Reset the snake's body to its initial position
+        direction = { 1, 0 };   // Reset the snake's direction to its initial direction
     }
 };
 
