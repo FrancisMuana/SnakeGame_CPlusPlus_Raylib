@@ -86,7 +86,7 @@ public:
 class Food  // Class to represent the food in the game
 {
 public:
-    Vector2 position;    
+    Vector2 position;   // Position of the food    
     Texture2D texture;   // Texture of the food image
 
     Food(std::deque<Vector2> snakeBody)  // Constructor of the Food class
@@ -95,7 +95,7 @@ public:
         texture = LoadTextureFromImage(image);  // Create a texture from the image
         UnloadImage(image); // Unload the image from memory
 
-        position = GenerateRandomPosition(snakeBody);
+        position = GenerateRandomPosition(snakeBody);   // Generate a random position for the food
     }
 
     ~Food() // Destructor of the Food class
@@ -108,7 +108,7 @@ public:
         DrawTexture(texture, offset + position.x*cellSize, offset + position.y*cellSize, WHITE);  // Draw the texture at the position with white color
     }
 
-    Vector2 GenerateRandomCell()
+    Vector2 GenerateRandomCell()    // Function to generate a random cell position
     {
         float x = GetRandomValue(0, cellCount - 1);
         float y = GetRandomValue(0, cellCount - 1);
@@ -117,16 +117,17 @@ public:
         return Vector2{ x, y };
     }
 
-    Vector2 GenerateRandomPosition(std::deque<Vector2> snakeBody)
+    Vector2 GenerateRandomPosition(std::deque<Vector2> snakeBody)   // Function to generate a random position for the food
     {
-        Vector2 position = GenerateRandomCell();
+        Vector2 position = GenerateRandomCell();    // Generate a random cell position
 
+        // Ensure that the food position is not overlapping with the snake body
         while (ElementInDeque(position, snakeBody))
         {
-            position = GenerateRandomCell();
+            position = GenerateRandomCell();    // Generate another random cell position
         }
 
-        return position;
+        return position;    // Return the valid food position
     }
 };
 
