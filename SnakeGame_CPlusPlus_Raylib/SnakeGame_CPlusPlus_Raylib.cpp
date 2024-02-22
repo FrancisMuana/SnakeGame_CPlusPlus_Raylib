@@ -134,52 +134,52 @@ public:
 class Game
 {
 public:
-    Snake snake = Snake();
-    Food food = Food(snake.body);
-    bool running = true;
-    int score = 0;
-    Sound eatSound;
-    Sound wallSound;
+    Snake snake = Snake();          // Instance of the Snake class representing the game's snake
+    Food food = Food(snake.body);   // Instance of the Food class representing the game's food, initialized with the snake's body
+    bool running = true;            // Flag indicating whether the game is running
+    int score = 0;                  // Current score of the player
+    Sound eatSound;                 // Sound effect for when the snake eats food
+    Sound wallSound;                // Sound effect for when the snake hits the wall
 
     Game()
     {
-        InitAudioDevice();
-        eatSound = LoadSound("Sounds/eat.mp3");
-        wallSound = LoadSound("Sounds/wall.mp3");
+        InitAudioDevice();          // Initialize the audio device
+        eatSound = LoadSound("Sounds/eat.mp3");   // Load the eat sound effect
+        wallSound = LoadSound("Sounds/wall.mp3"); // Load the wall collision sound effect
     }
 
     ~Game()
-    {        
-        UnloadSound(eatSound);
-        UnloadSound(wallSound);
-        CloseAudioDevice();
+    {
+        UnloadSound(eatSound);      // Unload the eat sound effect
+        UnloadSound(wallSound);     // Unload the wall collision sound effect
+        CloseAudioDevice();         // Close the audio device
     }
 
     void Draw()
     {
-        food.Draw();
-        snake.Draw();
+        food.Draw();                // Draw the food on the screen
+        snake.Draw();               // Draw the snake on the screen
     }
 
     void Update()
     {
         if (running == true)
         {
-            snake.Update();
-            CheckCollisionWithFood();
-            CheckCollisionWithEdges();
-            CheckCollisionWithTail();
-        }       
+            snake.Update();                 // Update the snake's position and state
+            CheckCollisionWithFood();       // Check for collision with food
+            CheckCollisionWithEdges();      // Check for collision with edges of the screen
+            CheckCollisionWithTail();       // Check for collision with the snake's tail
+        }
     }
 
     void CheckCollisionWithFood()
     {
         if (Vector2Equals(snake.body[0], food.position))
         {
-            food.position = food.GenerateRandomPosition(snake.body);
-            snake.addSegment = true;
-            score++;
-            PlaySound(eatSound);
+            food.position = food.GenerateRandomPosition(snake.body);  // Generate new position for food
+            snake.addSegment = true;                                  // Inform snake to add a new segment
+            score++;                                                  // Increment the score
+            PlaySound(eatSound);                                      // Play the eat sound effect
         }
     }
 
@@ -187,53 +187,53 @@ public:
     {
         if (snake.body[0].x == cellCount || snake.body[0].x == -1)
         {
-            GameOver();
+            GameOver();                // Game over if snake hits horizontal edges
         }
         if (snake.body[0].y == cellCount || snake.body[0].y == -1)
         {
-            GameOver();
+            GameOver();                // Game over if snake hits vertical edges
         }
     }
 
     void GameOver()
     {
-        snake.Reset();
-        food.position = food.GenerateRandomPosition(snake.body);
-        running = false;
-        score = 0;
-        PlaySound(wallSound);
+        snake.Reset();                // Reset the snake's position and state
+        food.position = food.GenerateRandomPosition(snake.body);  // Generate new position for food
+        running = false;              // Set the game state to not running
+        score = 0;                    // Reset the score
+        PlaySound(wallSound);         // Play the wall collision sound effect
     }
 
     void CheckCollisionWithTail()
     {
-        std::deque<Vector2> headlessBody = snake.body;
-        headlessBody.pop_front();
+        std::deque<Vector2> headlessBody = snake.body;   // Copy of the snake's body without the head
+        headlessBody.pop_front();                        // Remove the head from the copy
         if (ElementInDeque(snake.body[0], headlessBody))
         {
-            GameOver();
+            GameOver();               // Game over if snake collides with its own tail
         }
     }
 };
 
 int main()
 {
-    std::cout << "Game Commence\n"; // Print a message to the console indicating game start
+    std::cout << "Game Commence\n";  // Print a message to the console indicating game start
 
-    InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Snake Game");   // Create the game window with appropriate size and title
-    SetTargetFPS(60);   // Set the target frames per second for smooth animation
+    InitWindow(2 * offset + cellSize * cellCount, 2 * offset + cellSize * cellCount, "Snake Game");  // Create the game window with appropriate size and title
+    SetTargetFPS(60);  // Set the target frames per second for smooth animation
 
-    Game game = Game();
-   
+    Game game = Game();  // Create an instance of the Game class
 
-    while (WindowShouldClose() == false)    // Main game loop (runs until the window is closed)
+    while (WindowShouldClose() == false)  // Main game loop (runs until the window is closed)
     {
-        BeginDrawing(); // Begin drawing operations
+        BeginDrawing();  // Begin drawing operations
 
-        if (EventTriggered(0.2))
+        if (EventTriggered(0.2))  // Check if the event is triggered (e.g., for updating the game)
         {
-            game.Update();
-        }   
+            game.Update();  // Update the game logic
+        }
 
+        // Check for key presses to change the snake's direction
         if (IsKeyPressed(KEY_UP) && game.snake.direction.y != 1)
         {
             game.snake.direction = { 0, -1 };
@@ -255,13 +255,13 @@ int main()
             game.running = true;
         }
 
-        ClearBackground(green); // Clear the screen with the light green background color     
-        DrawRectangleLinesEx(Rectangle{(float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10}, 5.0f, darkGreen);
-        DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);
-        DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);
-        game.Draw();
+        ClearBackground(green);  // Clear the screen with the light green background color
+        DrawRectangleLinesEx(Rectangle{ (float)offset - 5, (float)offset - 5, (float)cellSize * cellCount + 10, (float)cellSize * cellCount + 10 }, 5.0f, darkGreen);  // Draw the border of the game area
+        DrawText("Retro Snake", offset - 5, 20, 40, darkGreen);  // Draw the game title
+        DrawText(TextFormat("%i", game.score), offset - 5, offset + cellSize * cellCount + 10, 40, darkGreen);  // Draw the player's score
+        game.Draw();  // Draw the game elements (snake and food)
 
-        EndDrawing();   // End drawing operations
+        EndDrawing();  // End drawing operations
     }
 
     CloseWindow();  // Close the game window
